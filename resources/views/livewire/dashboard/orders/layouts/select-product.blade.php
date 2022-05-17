@@ -21,7 +21,13 @@
                     @endforeach
                 </select>
             </div>
-                     
+            <div class="pull-right">
+                <button wire:click="loadDiscount_to_modal" data-toggle="modal" data-target="#modal-discount" type="button" class="btn btn-secondary">
+                    <i class="fa fa-usd"></i>
+                    Descontar
+                </button>
+            </div>
+            
         </div>
     </div>
 </div>

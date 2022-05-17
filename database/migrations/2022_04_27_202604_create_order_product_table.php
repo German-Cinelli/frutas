@@ -19,6 +19,8 @@ class CreateOrderProductTable extends Migration
             $table->integer('unit_price');
             $table->integer('qty')->default(1);
             $table->integer('price');
+            $table->boolean('stat')->default(0);
+            $table->integer('price_kg')->nullable()->default(null);
 
             $table->timestamps();
             $table->softdeletes();

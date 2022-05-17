@@ -77,6 +77,7 @@
 
                                         @switch(true)
                                             @case($order->status_id == 1)
+                                                <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info shadow btn-xs sharp mr-1" data-toogle="tooltip" title="Ver pedido"><i class="fa fa-info-circle"></i></a>
                                                 <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-primary shadow btn-xs sharp mr-1" data-toogle="tooltip" title="Editar pedido"><i class="fa fa-pencil"></i></a>
                                                 <a href="#" wire:click="$emit('cancelOrder', {{ $order }})" class="btn btn-danger shadow btn-xs sharp mr-1" data-toogle="tooltip" title="Cancelar pedido"><i class="fa fa-close"></i></a>
                                                 <a href="#" wire:click="$emit('openModal_debito', {{ $order }})" class="btn btn-warning shadow btn-xs sharp mr-1" data-toogle="tooltip" title="Registrar pago"><i class="fa fa-usd text-white"></i></a>

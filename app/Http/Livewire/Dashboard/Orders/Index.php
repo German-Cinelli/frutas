@@ -114,37 +114,47 @@ class Index extends Component
         $this->validate([
             'input_debito' => 'required',
         ]);
+
         /**
-         * Comprobamos que haya pagos anteriores
+         * Comprobamos que el monto ingresado no sea superior a lo que el cliente debe
          */
-        if($order->payments->first()){
-            $latest_payment = Payment::latest()->first();
-
-            $payment = new Payment();
-            $payment->order_id = $this->order->id;
-            $payment->payment = $this->input_debito;
-            $payment->debito = $latest_payment->debito - $this->input_debito;
-            $payment_save = $payment->save();
-            
+        if($this->input_debito > $this->order->debt && $this->order->debt != 0){
+            $this->notification('warning', 'El monto ingresado no debe ser mayor a la deuda del cliente');
         } else {
-            $payment = new Payment();
-            $payment->order_id = $this->order->id;
-            $payment->payment = $this->input_debito;
-            $payment->debito = $order->total - $this->input_debito;
-            $payment_save = $payment->save();
+            /**
+             * Comprobamos que haya pagos anteriores
+             */
+            if($order->payments->first()){
+                $latest_payment = Payment::latest()->first();
 
-        }
+                $payment = new Payment();
+                $payment->order_id = $this->order->id;
+                $payment->payment = $this->input_debito;
+                $payment->debito = $latest_payment->debito - $this->input_debito;
+                $payment_save = $payment->save();
+                
+            } else {
+                $payment = new Payment();
+                $payment->order_id = $this->order->id;
+                $payment->payment = $this->input_debito;
+                $payment->debito = $order->total - $this->input_debito;
+                $payment_save = $payment->save();
 
-        if($payment->debito <= 0){
-            $order->status_id = 4; // Pasamos el estado concretado;
-            $order->debt = 4; // Output: 0
-            $order->save();
-            $this->notification('success', 'Se registró un pago de ' . $this->input_debito . ' [PEDIDO CONCRETADO]');
-        } else {
-            $order->status_id = 3; // Pasamos el estado a pendiente;
-            $order->debt = $payment->debito;
-            $order_save = $order->save();
-            $this->notification('success', 'Se registró un pago de ' . $this->input_debito);
+            }
+
+            if($payment->debito <= 0){
+                $order->status_id = 4; // Pasamos el estado concretado;
+                $order->debt = 4; // Output: 0
+                $order->save();
+                $this->notification('success', 'Se registró un pago de ' . $this->input_debito . ' [PEDIDO CONCRETADO]');
+                $this->emit('closeModal_debito'); // Cerramos el modal
+            } else {
+                $order->status_id = 3; // Pasamos el estado a pendiente;
+                $order->debt = $payment->debito;
+                $order_save = $order->save();
+                $this->notification('success', 'Se registró un pago de ' . $this->input_debito);
+                $this->emit('closeModal_debito'); // Cerramos el modal
+            }
         }
         
     }

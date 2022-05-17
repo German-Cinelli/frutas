@@ -735,7 +735,7 @@
 						</a>
                         <ul aria-expanded="false">
                             <li><a href="{{ url('/products') }}">Ver productos</a></li>
-							<li><a href="{{ url('/categories') }}">Categorias</a></li>
+							<!--<li><a href="{{ url('/categories') }}">Categorias</a></li>-->
                         </ul>
                     </li>
                 </ul>
@@ -872,6 +872,27 @@
 			$('#modal-edit-product').modal('hide');
 		})
 	</script>
+
+	<!-- Evento para cerrar el modal luego de aplicar un debito -->
+	<script>
+		window.livewire.on('closeModal_debito', () => {
+			$('#modal-debito').modal('hide');
+		})
+  	</script>
+
+	<!-- Evento para cerrar el modal luego de editar el precio por kg. de un producto -->
+	<script>
+		window.livewire.on('closeModal_pice_kg', () => {
+			$('#modal-price-kg').modal('hide');
+		})
+  	</script>
+
+	<!-- Evento para cerrar el modal luego de aplicar un descuento a un pedido -->
+	<script>
+		window.livewire.on('closeModal_discount', () => {
+			$('#modal-discount').modal('hide');
+		})
+  	</script>
 
 	<!-- Evento para abrir modal debito -->
 	<script>

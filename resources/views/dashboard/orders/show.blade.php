@@ -54,6 +54,7 @@
                                     <th class="right">Unitario</th>
                                     <th class="center">Ctd.</th>
                                     <th class="right">Precio</th>
+                                    <th class="right">$ / Kg</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,7 +64,12 @@
                                     <td class="left strong">{{ $item->product->name }}</td>
                                     <td class="right">{{ priceFormat($item->unit_price) }}</td>
                                     <td class="center">x{{ $item->qty }}</td>
-                                    <td class="right">{{ priceFOrmat($item->price) }}</td>
+                                    <td class="right">{{ priceFormat($item->price) }}</td>
+                                    <td class="right">
+                                        @if($item->price_kg)
+                                            {{ priceFormat($item->price_kg) }}
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

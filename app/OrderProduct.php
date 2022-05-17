@@ -17,7 +17,9 @@ class OrderProduct extends Model
         'product_id',
         'unit_price',
         'qty',
-        'price'
+        'price',
+        'stat',
+        'price_kg'
     ];
 
     public function product(){

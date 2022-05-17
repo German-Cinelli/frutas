@@ -427,6 +427,15 @@ class ProductSeeder extends Seeder
 
         DB::table('products')->insert([
             'category_id' => 1,
+            'name' => 'Perejil',
+            'image' => '/assets/images/products/perejil.jpg',
+            'slug' => 'perejil',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('products')->insert([
+            'category_id' => 1,
             'name' => 'Piña',
             'image' => '/assets/images/products/piña.jpg',
             'slug' => 'pina',

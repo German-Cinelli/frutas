@@ -19,10 +19,13 @@ class Edit extends Component
 
     public $product = false; // Propiedad para ser manejada en el modal de editar precio de un producto
 
+    public $price_kg = false;
+
+    public $input_discount = 0;
+
     protected $listeners = [
         'selectedProduct',
         'modalAdd_product',
-        'closeModal_product_edit',
         'cancel'
     ];
 
@@ -96,7 +99,7 @@ class Edit extends Component
                 $order->save();
 
                 $this->notification('success', 'Precio modificado');
-                //$this->emit('closeModal_product_edit'); No funciona, corregir
+                $this->emit('closeModal_product_edit');
 
             }
 
@@ -320,6 +323,90 @@ class Edit extends Component
 
     public function cancel(){
         dd($this->order);
+    }
+
+    public function changeStat($item_id){
+        $item = OrderProduct::find($item_id);
+        $msg = '';
+        if($item->stat == 0){
+            $msg = 'MARCADO';
+            $item->update([
+                'stat' => 1
+            ]);
+        } else {
+            $msg = 'DESMARCADO';
+            $item->update([
+                'stat' => 0
+            ]);
+        }
+        
+        $save = $item->save();
+
+        if($save){
+            $this->notification('success', $msg);
+        } else {
+            $this->notification('error', 'Estado cambiado!');
+        }
+        
+    }
+
+    /**
+     * Botón editar
+     */
+    public function price_kg(OrderProduct $item){
+        $this->product = $item->id;
+        $this->price_kg = $item->price_kg;
+    }
+
+    /**
+     * Botón de confirmar edición de precio
+     * modal-edit-product
+     */
+    public function updatePrice_kg(OrderProduct $item){
+       
+        if($this->price_kg < 0 || $this->price_kg == null){
+            $this->notification('error', 'Seleccione un precio válido!');
+        } else {
+            $item->price_kg = $this->price_kg;
+            $save = $item->save();
+            if($save){
+                $this->notification('success', 'Precio por Kg modificado!');
+                $this->emit('closeModal_pice_kg'); // Cerramos el modal
+            } else {
+                $this->notification('error', 'Se produjo un error al ingresar el precio por Kg.');
+            }
+        }
+        
+    }
+
+    /**
+     * Método para cargar el descuento que ya tiene
+     * un pedido en el input del descuento del modal
+     */
+    public function loadDiscount_to_modal(){
+        $this->input_discount = $this->order->dto;
+    }
+
+
+    /**
+     * Aplicar descuento al pedido
+     */
+    public function discount(){
+        if($this->input_discount < 0 || $this->input_discount == null){
+            $this->notification('error', 'Ingrese un vallor válido');
+        } else {
+            $order = Order::find($this->order->id);
+            $order->total = ($order->total + $order->dto) - $this->input_discount;
+            $order->dto = $this->input_discount;
+            $save = $order->save();
+            if($save){
+                $this->notification('success', 'Descuento aplicado!');
+                $this->emit('closeModal_discount'); // Cerramos el modal
+            } else {
+                $this->notification('error', 'Se produjo un error, recárgue la página para intentarlo nuevamente');
+            }
+            
+        }
     }
 
 

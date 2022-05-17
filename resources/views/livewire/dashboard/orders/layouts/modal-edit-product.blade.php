@@ -19,7 +19,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="exampleFormControlSelect2">Ingrese precio unitario <span class="text-danger">(*)</span></label>
-                                <input wire:model.defer="unit_price_edit" type="number" class="form-control" minlenght="0" required>
+                                <input wire:model.defer="unit_price_edit" type="number" class="form-control" min="1" required>
                             </div>
                         </div>
                     </div><!-- ./row -->
